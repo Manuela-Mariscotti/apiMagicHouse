@@ -1,5 +1,5 @@
 function test(req, res){
-    res.send('holi')
+    res.send({messege:'OK'})
 }
 
 module.exports = {test}
