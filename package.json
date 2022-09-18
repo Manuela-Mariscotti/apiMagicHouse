@@ -1,0 +1,24 @@
+{
+  "name": "apimagichouse",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Manuela-Mariscotti/apiMagicHouse.git"
+  },
+  "author": "Manuela y Dani",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Manuela-Mariscotti/apiMagicHouse/issues"
+  },
+  "homepage": "https://github.com/Manuela-Mariscotti/apiMagicHouse#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "mysql2": "^2.3.3"
+  }
+}
