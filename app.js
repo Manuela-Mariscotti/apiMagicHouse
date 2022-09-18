@@ -4,6 +4,7 @@ const cors = require('cors');
 const errorHandling = require('./error/errorHandling');
 
 const testRouter = require('./router/test.router');
+const loginRouter = require('./router/login.router');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 app.use(testRouter);
+app.use(loginRouter);
 
 app.use( (req, res, next) => {
 

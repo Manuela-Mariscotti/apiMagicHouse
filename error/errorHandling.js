@@ -6,6 +6,7 @@ function errorHandling(err, req, res, next){
         message: 'INTERNAL SERVER ERROR HTTP 500 --> ' + err.message
     });
 
+    next();
 }
 
 module.exports = errorHandling;
