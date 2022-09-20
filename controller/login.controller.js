@@ -2,7 +2,7 @@ const e = require('cors')
 const db = require('../database')
 
 function login(req, res){
-    const sql = `SELECT * FROM users WHERE (name = ? && password = ?)`
+    const sql = `SELECT * FROM users WHERE (username = ? && password = ?)`
     const params = [req.body.username, req.body.password]
 
     db.connect( (error) => {
