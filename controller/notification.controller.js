@@ -24,6 +24,7 @@ function getNextEvent(req, res){
 }
 
 function getPendingTasks(req, res){
+    console.log('holi')
     db.connect( (error) => {
         if(error){
             console.error('ERROR FETCHING PENDING TASKS');
