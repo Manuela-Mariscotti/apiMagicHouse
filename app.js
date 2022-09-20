@@ -5,6 +5,7 @@ const errorHandling = require('./error/errorHandling');
 
 const testRouter = require('./router/test.router');
 const loginRouter = require('./router/login.router');
+const registroRouter = require('./router/registro.router');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.urlencoded({extended: false}));
 
 app.use(testRouter);
 app.use(loginRouter);
+app.use(registroRouter)
 
 app.use( (req, res, next) => {
 
