@@ -5,9 +5,11 @@ const errorHandling = require('./error/errorHandling');
 
 const testRouter = require('./router/test.router');
 const loginRouter = require('./router/login.router');
+const registroRouter = require('./router/registro.router')
 const notificationsRouter = require('./router/notifications.router');
 const spentsRouter = require('./router/spents.router');
 const userdataRouter = require('./router/userdata.router');
+const hogarCtrl = require ('./router/crear-hogar.router');
 
 const app = express();
 
@@ -19,9 +21,11 @@ app.use(express.urlencoded({extended: false}));
 
 app.use(testRouter);
 app.use(loginRouter);
+app.use(registroRouter);
 app.use(notificationsRouter);
 app.use(spentsRouter);
 app.use(userdataRouter);
+app.use(hogarCtrl);
 
 app.use( (req, res, next) => {
 
