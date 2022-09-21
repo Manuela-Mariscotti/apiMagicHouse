@@ -1,5 +1,6 @@
 const db = require('../database');
 
+
 function postNewHogar(req,res){
     console.log("Lanzada postNewHogar()");
     console.log(req.body);
