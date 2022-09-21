@@ -84,6 +84,95 @@ function getSpentsByHome(req, res){
     });
 }
 
+function divide(req, res){
+
+    let usuarios = [
+        {
+            nombre: 'user1',
+            cantidadSobrante: 100   
+           },{
+            nombre: 'user2',
+            cantidadSobrante: 100
+           },{
+            nombre: 'user3',
+            cantidadSobrante: 100
+
+           },{
+            nombre: 'user4',
+            cantidadSobrante: 100   
+           },
+    ]
+
+    // Calculo de la media: HACER UNA FUNCION
+    let sum = usuarios.reduce((previous, current) => {
+       return {
+                nombre: "total",
+                cantidadSobrante: current.cantidadSobrante + previous.cantidadSobrante
+            }
+    });
+    let avg = sum.cantidadSobrante / usuarios.length;
+    console.log(avg)
 
 
-module.exports = {postSpent, getSpentsByHome}
+    // Obtener arrays positivos, negativos, ceros. HACER FUNCION
+    let positivos = []
+    let negativos = []
+    let ceros = []
+
+    let transactions = [];    
+
+    usuarios.forEach( (user) => {
+
+        user.saldo = user.cantidadSobrante - avg;
+        user.saldo > 0 ? positivos.push(user) : user.saldo < 0 ? negativos.push(user) : ceros.push(user); 
+
+
+    });
+
+    console.log(negativos)
+    console.log(positivos)
+
+        negativos.forEach( (pagador) => {
+
+
+            while(positivos.length > 0 && pagador.saldo < 0){
+
+                
+                let cobrador = positivos[0];
+                
+                let cantidadSobrante = pagador.saldo + cobrador.saldo;
+                
+                let transaction = {
+                    pagador: {...pagador},
+                    cobrador: {...cobrador},
+                    value: -1
+                };
+
+
+                if(cantidadSobrante < 0){
+
+                    transaction.value = pagador.saldo - cantidadSobrante
+
+                    pagador.saldo = cantidadSobrante;
+                    positivos.shift();
+
+                }else {
+
+                    transaction.value = pagador.saldo ;
+                    cobrador.saldo = cantidadSobrante;
+                    pagador.saldo = 0;
+                }
+                
+                transactions.push(transaction)
+            }
+
+
+
+        });
+
+    console.log('.-.-.-.-.-.-.-.-.-..-.-.-.-.-.-.-..-.-.');
+    console.log(transactions)
+}
+
+
+module.exports = {postSpent, getSpentsByHome, divide}
