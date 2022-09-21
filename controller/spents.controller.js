@@ -172,6 +172,8 @@ function divide(req, res){
         code: 200,
         data: transactions
     }
+
+    res.send(response)
 }
 
 
