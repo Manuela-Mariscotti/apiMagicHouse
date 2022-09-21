@@ -13,7 +13,7 @@ function postUser(req,res){
             let response = {
                 error : true,
                 code : 400,
-                message : 'DB Connection error --> '+error.message
+                data : 'DB Connection error --> '+error.message
             }
             res.send(response)
         }else{
@@ -22,7 +22,7 @@ function postUser(req,res){
                     let response = {
                         error : true,
                         code : 400,
-                        message : 'Error executing DB query -->'+error.message
+                        data : 'Error executing DB query -->'+error.message
                     };
                     
                     res.send(response)
