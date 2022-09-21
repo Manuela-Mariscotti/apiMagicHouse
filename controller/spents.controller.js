@@ -129,9 +129,6 @@ function divide(req, res){
 
     });
 
-    console.log(negativos)
-    console.log(positivos)
-
         negativos.forEach( (pagador) => {
 
 
