@@ -1,11 +1,11 @@
-const db = require ("../database");
+const db = require('../database');
 
-function postUser(req,res){
-    console.log("Lanzada postUser");
+
+function postNewHogar(req,res){
+    console.log("Lanzada postNewHogar()");
     console.log(req.body);
 
-    let sql="INSERT INTO users (username,email,password) VALUES ('"+req.body.username+"','"+req.body.email+"','"+req.body.password+"')";
-    console.log("Query enviada"+sql);
+    let sql = "INSERT INTO hogares (name,type) VALUES ('"+req.body.name+"','"+req.body.type+"')"
 
     db.connect((error)=>{
 
@@ -39,7 +39,15 @@ function postUser(req,res){
         }
 
     })
+}
+
+function putJoinHogar(req,res){
+    console.log("Lanzada putJoinHogar()");
+
+    console.log(req.body);
+
+    
 
 }
 
-module.exports = {postUser}
+module.exports = {postNewHogar,putJoinHogar}
