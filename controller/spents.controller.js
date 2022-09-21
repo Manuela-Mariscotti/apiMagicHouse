@@ -87,93 +87,155 @@ function getSpentsByHome(req, res){
 function divide(req, res){
 
     let usuarios = [
-        {
-            nombre: 'user1',
-            cantidadSobrante: 100   
-           },{
-            nombre: 'user2',
-            cantidadSobrante: 100
-           },{
-            nombre: 'user3',
-            cantidadSobrante: 100
+        // {
+        //     nombre: 'user1',
+        //     cantidad: 100   
+        //    },{
+        //     nombre: 'user2',
+        //     cantidad: 100
+        //    },{
+        //     nombre: 'user3',
+        //     cantidad: 100
 
-           },{
-            nombre: 'user4',
-            cantidadSobrante: 100   
-           },
+        //    },{
+        //     nombre: 'user4',
+        //     cantidad: 100   
+        //    },
     ]
 
-    // Calculo de la media: HACER UNA FUNCION
-    let sum = usuarios.reduce((previous, current) => {
-       return {
-                nombre: "total",
-                cantidadSobrante: current.cantidadSobrante + previous.cantidadSobrante
+    db.connect( (error) => {
+        if(error){
+
+            console.error('ERROR CONNECTING DB')
+
+            const response = {
+                error: true,
+                code: 400,
+                message: error.message
             }
-    });
-    let avg = sum.cantidadSobrante / usuarios.length;
-    console.log(avg)
 
+            res.send(response)
+        }else {
 
-    // Obtener arrays positivos, negativos, ceros. HACER FUNCION
-    let positivos = []
-    let negativos = []
-    let ceros = []
-
-    let transactions = [];    
-
-    usuarios.forEach( (user) => {
-
-        user.saldo = user.cantidadSobrante - avg;
-        user.saldo > 0 ? positivos.push(user) : user.saldo < 0 ? negativos.push(user) : ceros.push(user); 
-
-
-    });
-
-        negativos.forEach( (pagador) => {
-
-
-            while(positivos.length > 0 && pagador.saldo < 0){
-
+            const sql = 
+                `SELECT gastos.id_user, username, value FROM gastos
+                JOIN users ON (gastos.id_user = users.id_user)
+                WHERE (id_hogar = ${req.query.id_hogar})`;
                 
-                let cobrador = positivos[0];
-                
-                let cantidadSobrante = pagador.saldo + cobrador.saldo;
-                
-                let transaction = {
-                    pagador: {...pagador},
-                    cobrador: {...cobrador},
-                    value: -1
-                };
+                console.log(sql)
+
+            db.query(sql, (error, result) => {
+
+                if(error){
+                    console.error('ERROR EXECUTING QUERY DIVIDE');
+
+                    const response = {
+                        error: true,
+                        code: 400,
+                        message: error.message
+                    };
+
+                    res.send(response);
+
+                } else{
+
+                    // console.log(result)
+                   usuarios = result.map( (item) => {
+                    return {
+                        nombre: item.username,
+                        cantidad: item.value
+                    }
+                   })
+
+                   console.log(usuarios)
+
+                    let sum = usuarios.length > 0 ? usuarios.reduce((previous, current) => {
+                        return {
+                            nombre: "total",
+                            cantidad: current.cantidad + previous.cantidad
+                        }
+                    }) : 0;
+
+                    let avg = sum.cantidad / usuarios.length;
+                    console.log('sum');
+                    console.log(sum)
 
 
-                if(cantidadSobrante < 0){
+                    // Obtener arrays positivos, negativos, ceros. HACER FUNCION
+                    let positivos = []
+                    let negativos = []
+                    let ceros = []
 
-                    transaction.value = pagador.saldo - cantidadSobrante
+                    let transactions = [];
 
-                    pagador.saldo = cantidadSobrante;
-                    positivos.shift();
+                    usuarios.forEach((user) => {
 
-                }else {
+                        user.saldo = user.cantidad - avg;
+                        user.saldo > 0 ? positivos.push(user) : user.saldo < 0 ? negativos.push(user) : ceros.push(user);
 
-                    transaction.value = pagador.saldo ;
-                    cobrador.saldo = cantidadSobrante;
-                    pagador.saldo = 0;
+                    });
+                    
+                    // console.log(ceros);
+              
+                    // console.log(usuarios);
+
+                    negativos.forEach((pagador) => {
+
+
+                        while (positivos.length > 0 && pagador.saldo < 0) {
+
+                            let cobrador = positivos[0];
+
+                            let cantidadSobrante = pagador.saldo + cobrador.saldo;
+
+                            let transaction = {
+                                pagador: { ...pagador },
+                                cobrador: { ...cobrador },
+                                value: -1
+                            };
+
+
+                            if (cantidadSobrante < 0) {
+
+                                transaction.value = pagador.saldo - cantidadSobrante * -1
+
+                                pagador.saldo = cantidadSobrante;
+                                positivos.shift();
+
+                            } else {
+
+                                transaction.value = pagador.saldo * -1;
+                                cobrador.saldo = cantidadSobrante;
+                                pagador.saldo = 0;
+                            }
+
+                            if (transaction.cobrador.nombre != transaction.pagador.nombre){
+                            }  
+                            transactions.push(transaction)
+                            console.log(transaction)
+                        }
+
+
+
+                    });
+
+                    const response = {
+                        error: false,
+                        code: 200,
+                        data: transactions
+                    }
+
+                    res.send(response)
+
                 }
-                
-                transactions.push(transaction)
-            }
+            })
+        }
+    })
 
 
 
-        });
-
-    const response = {
-        error: false,
-        code: 200,
-        data: transactions
-    }
-
-    res.send(response)
+    // Calculo de la media: HACER UNA FUNCION
+   
 }
 
 
