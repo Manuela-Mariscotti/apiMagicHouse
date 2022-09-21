@@ -170,8 +170,11 @@ function divide(req, res){
 
         });
 
-    console.log('.-.-.-.-.-.-.-.-.-..-.-.-.-.-.-.-..-.-.');
-    console.log(transactions)
+    const response = {
+        error: false,
+        code: 200,
+        data: transactions
+    }
 }
 
 
