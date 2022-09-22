@@ -118,9 +118,11 @@ function divide(req, res){
         }else {
 
             const sql = 
-                `SELECT gastos.id_user, username, value FROM gastos
+                `SELECT gastos.id_user, username, sum(value) AS value FROM gastos
                 JOIN users ON (gastos.id_user = users.id_user)
-                WHERE (id_hogar = ${req.query.id_hogar})`;
+                WHERE (id_hogar = ${req.query.id_hogar})
+                GROUP BY username`;
+                
                 
                 console.log(sql)
 
@@ -159,6 +161,8 @@ function divide(req, res){
                     let avg = sum.cantidad / usuarios.length;
                     console.log('sum');
                     console.log(sum)
+                    console.log('avg')
+                    console.log(avg)
 
 
                     // Obtener arrays positivos, negativos, ceros. HACER FUNCION
@@ -168,12 +172,21 @@ function divide(req, res){
 
                     let transactions = [];
 
+                    let usernames = [];
                     usuarios.forEach((user) => {
+                        
+                        if(!usernames.includes(user.nombre)){
+                            usernames.push(user.nombre)
+                        }                           
 
                         user.saldo = user.cantidad - avg;
                         user.saldo > 0 ? positivos.push(user) : user.saldo < 0 ? negativos.push(user) : ceros.push(user);
-
                     });
+
+
+                    
+
+
                     
                     // console.log(ceros);
               
