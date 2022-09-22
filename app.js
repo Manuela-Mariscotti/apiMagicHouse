@@ -10,6 +10,7 @@ const notificationsRouter = require('./router/notifications.router');
 const spentsRouter = require('./router/spents.router');
 const userdataRouter = require('./router/userdata.router');
 const hogarCtrl = require ('./router/crear-hogar.router');
+const taskCtrl = require ('./router/task.router');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(notificationsRouter);
 app.use(spentsRouter);
 app.use(userdataRouter);
 app.use(hogarCtrl);
+app.use(taskCtrl);
 
 app.use( (req, res, next) => {
 
