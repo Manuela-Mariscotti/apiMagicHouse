@@ -4,10 +4,12 @@ function postSpent(req, res){
 
     console.log(req.body)
 
-    const sql = `INSERT INTO gastos (title, date, id_user, created_by, value) VALUES (?, ?, ?, ?, ?)`
-    const params = [req.body.title, req.body.date, req.body.id_user, req.body.created_by, req.body.value]
-
+    const spent = req.body.spent
     const id_hogar = req.body.id_hogar
+
+    const sql = `INSERT INTO gastos (title, date, id_user, created_by, value) VALUES (?, ?, ?, ?, ?)`
+    const params = [spent.title, spent.date, spent.id_user, spent.created_by, spent.value]
+
 
 
     db.connect( (error) => {
@@ -26,6 +28,7 @@ function postSpent(req, res){
                     res.send(response);
                 }else{
                     db.query(`UPDATE hogares SET updated_transactions = 0 WHERE (id_hogar = ${id_hogar})`)
+                    console.log('transactions_updated = false to hogar: ' + id_hogar)
                     const response = {
                         error: false,
                         code: 200,
@@ -174,10 +177,11 @@ function divide(req, res){
 
 function updateTransactionsTable(transactions, id_hogar){
 
-    let sql_transaction = `INSERT INTO transactions (id_pagador, id_cobrador, value) VALUES`;
+    let sql_transaction = `INSERT INTO transactions (id_pagador, nombre_pagador, id_cobrador, nombre_cobrador, value) VALUES`;
 
     transactions.forEach( (transaction, i) => {
-        let transaction_string = `(${transaction.pagador.id_usuario}, ${transaction.cobrador.id_usuario}, ${transaction.value})`
+        let transaction_string = `(${transaction.pagador.id_usuario}, '${transaction.pagador.nombre}', ${transaction.cobrador.id_usuario},
+             '${transaction.cobrador.nombre}', ${transaction.value})`
         
         if(i > 0){
             sql_transaction += ', '
@@ -197,7 +201,7 @@ function updateTransactionsTable(transactions, id_hogar){
             
             db.query(sql_transaction, (error, result) => {
                 if (error){
-                    console.error('ERROR INERTING TRANSACTION ON TABLE TRANSACTIONS')
+                    console.error('ERROR INSERTING TRANSACTION ON TABLE TRANSACTIONS')
                     console.error(error)
         
                 }else {
@@ -290,5 +294,103 @@ function generateTransactions(usuarios, id_hogar){
     return transactions
 }
 
+function isTransactionUpdated(req, res){
+    let sql = `SELECT updated_transactions FROM hogares WHERE (id_hogar = ${req.query.id_hogar})`
 
-module.exports = {postSpent, getSpentsByHome, divide}
+    db.connect( (error) => {
+        if(error){
+            console.error('ERROR CONNECTING DB')
+            console.error(error)
+
+            const response = {
+                error: true,
+                code: 400,
+                message: error.message
+            }
+            res.send(response)
+
+        }else{
+            db.query(sql, (error, result) => {
+                if(error){
+                    console.error('ERROR EXECUTING QUERY ISTRANSACTIONSUPDATED')
+                    console.error(error)
+                    const response = {
+                        error: true,
+                        code: 400,
+                        message: error.message
+                    }
+                    res.send(response)
+                }else{
+                    const response = {
+                        error: false,
+                        code: 200,
+                        data: result.pop().updated_transactions != 0
+                    }
+                    res.send(response)
+                }
+            });
+        }
+    });
+
+}
+
+function getTransactionsFromDB(req, res){
+    let sql = 
+    `SELECT id_pagador, nombre_pagador, id_cobrador, nombre_cobrador, value, id_hogar FROM transactions
+    JOIN users ON (id_pagador = users.id_user)
+    WHERE(id_hogar = ${req.query.id_hogar})`
+   
+    db.connect( (error) => {
+        if(error){
+            console.error('ERROR CONNECTING DB')
+            console.error(error)
+
+            const response = {
+                error: true,
+                code: 400,
+                message: error.message
+            }
+            res.send(response)
+
+        }else{
+            db.query(sql, (error, result) => {
+                
+                if(error){
+
+                    console.error('ERROR EXECUTING QUERY GETTRANSACTIONSFROMDB')
+                    console.error(error)
+                    const response = {
+                        error: true,
+                        code: 400,
+                        message: error.message
+                    }
+                    res.send(response)
+
+                }else{
+
+                    let data = [];
+
+                    result.forEach( (transaction) => {
+                        data.push({
+                            pagador: {id_usuario: transaction.id_pagador, nombre: transaction.nombre_pagador},
+                            cobrador:  {id_usuario: transaction.id_cobrador, nombre: transaction.nombre_cobrador},
+                            value: transaction.value
+                        })
+                    })
+
+
+                    const response = {
+                        error: false,
+                        code: 200,
+                        data: data
+                    }
+                    res.send(response)
+
+                }
+            });
+        }
+    });
+}
+
+
+module.exports = {postSpent, getSpentsByHome, divide, isTransactionUpdated, getTransactionsFromDB}
