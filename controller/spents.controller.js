@@ -7,6 +7,8 @@ function postSpent(req, res){
     const sql = `INSERT INTO gastos (title, date, id_user, created_by, value) VALUES (?, ?, ?, ?, ?)`
     const params = [req.body.title, req.body.date, req.body.id_user, req.body.created_by, req.body.value]
 
+    const id_hogar = req.body.id_hogar
+
 
     db.connect( (error) => {
         if (error){
@@ -23,6 +25,7 @@ function postSpent(req, res){
                     }
                     res.send(response);
                 }else{
+                    db.query(`UPDATE hogares SET updated_transactions = 0 WHERE (id_hogar = ${id_hogar})`)
                     const response = {
                         error: false,
                         code: 200,
