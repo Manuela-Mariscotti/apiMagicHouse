@@ -145,7 +145,7 @@ function divide(req, res){
                    usuarios = result.map( (item) => {
                     return {
                         nombre: item.username,
-                        cantidad: item.value
+                        cantidadAportada: item.value
                     }
                    })
 
@@ -154,11 +154,11 @@ function divide(req, res){
                     let sum = usuarios.length > 0 ? usuarios.reduce((previous, current) => {
                         return {
                             nombre: "total",
-                            cantidad: current.cantidad + previous.cantidad
+                            cantidadAportada: current.cantidadAportada + previous.cantidadAportada
                         }
                     }) : 0;
 
-                    let avg = sum.cantidad / usuarios.length;
+                    let avg = sum.cantidadAportada / usuarios.length;
                     console.log('sum');
                     console.log(sum)
                     console.log('avg')
@@ -179,7 +179,7 @@ function divide(req, res){
                             usernames.push(user.nombre)
                         }                           
 
-                        user.saldo = user.cantidad - avg;
+                        user.saldo = user.cantidadAportada - avg;
                         user.saldo > 0 ? positivos.push(user) : user.saldo < 0 ? negativos.push(user) : ceros.push(user);
                     });
 
