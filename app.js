@@ -12,7 +12,7 @@ const userdataRouter = require('./router/userdata.router');
 const hogarCtrl = require ('./router/crear-hogar.router');
 const taskCtrl = require ('./router/task.router');
 const listaCompraCtrl = require('./router/lista-compra.router');
-const budgetCtrl = require ('./router/budget.router');
+const budgetRouter = require ('./router/budget.router');
 
 const app = express();
 
@@ -30,8 +30,8 @@ app.use(spentsRouter);
 app.use(userdataRouter);
 app.use(hogarCtrl);
 app.use(taskCtrl);
-app.use(budgetCtrl);
 app.use(listaCompraCtrl)
+app.use(budgetRouter);
 
 app.use( (req, res, next) => {
 
