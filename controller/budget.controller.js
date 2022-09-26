@@ -42,4 +42,39 @@ function getBudgetPercent(req, res){
     });
 }
 
-module.exports = {getBudgetPercent}
+function postBudget(req, res){
+    const sql = 
+        `UPDATE hogares SET budget = ${req.body.budget}
+        WHERE (id_hogar = ${req.body.id_hogar})
+        `
+
+        db.query(sql ,(error, result) => {
+
+            if(error){
+                console.error('ERROR UPDATING BUDGET');
+                console.error(error);
+
+                const response = {
+                    error: true,
+                    code: 400,
+                    message: error.message
+                };
+
+                res.send(response);
+
+            }else{
+
+                const response = {
+                    error: false,
+                    code: 200,
+                    data:result
+                };
+
+                res.send(response);
+
+            }
+        
+        });
+}
+
+module.exports = {getBudgetPercent, postBudget}
