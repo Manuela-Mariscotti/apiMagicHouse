@@ -2,7 +2,10 @@ const db = require('../database');
 const moment = require('moment');
 
 function getAll(req, res){
-    const sql = `SELECT * FROM events`;
+    const sql = 
+    `SELECT * FROM events
+    JOIN users ON (created_by = id_user) 
+    WHERE (id_hogar = ${req.query.id_hogar})`;
 
     db.connect( (error) => {
         if (error){
