@@ -1,7 +1,7 @@
-const res = require('express/lib/response');
 const db = require('../database');
+const moment = require('moment');
 
-function getAll(){
+function getAll(req, res){
     const sql = `SELECT * FROM events`;
 
     db.connect( (error) => {
@@ -24,10 +24,22 @@ function getAll(){
                     
                     res.send(response);
                 } else {
+
+                    let data = result.map( (item) =>{
+                        let date = moment(item.date)
+                        
+                        return {
+                            title: item.title,
+                            description: item.description,
+                            created_by: item.created_by,
+                            date: date.format('YYYY-MM-DD')
+                        }
+                    })
+
                     const response = {
                         error: false,
                         code: 400,
-                        data: result
+                        data: data
                     }
                     
                     res.send(response);
