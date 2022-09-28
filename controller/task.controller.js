@@ -85,21 +85,60 @@ function getTaskByHome(req,res){
 
                     result.forEach( (item) => {
                         let tarea = tareas.find(element => element.taskname == item.taskname)
+
                         let asignacion = {
                             taskday : item.taskday, 
                             username: item.username
                         }
 
+                        let tmp = []
+                        for(let i = 0; i < 7; i++){
+                            tmp.push({
+                                username: 'unasigned'
+                            })
+                        }
+
+
                         if (tarea == undefined) {
 
                             tarea = {
                                 taskname: item.taskname, 
-                                asignacion: []
+                                asignacion: tmp
                             }
                             tareas.push(tarea)
                         }
+
+                        let weekday;
+
+                        switch(item.taskday){
+                            case 'L': 
+                                weekday = 0
+                                break;
+                            case 'M':
+                                weekday = 1;
+                                break;
+                            case 'X': 
+                                weekday = 2
+                                break;
+                            case 'J':
+                                weekday = 3;
+                                break;
+                            case 'V': 
+                                weekday = 4
+                                break;
+                            case 'S':
+                                weekday = 5;
+                                break;
+                            case 'D':
+                                weekday = 6;
+                                break;
+                            default:
+                                weekday = -1;
+                                break
+                        }
                         
-                        tarea.asignacion.push(asignacion)
+                        // tarea.asignacion.push(asignacion)
+                        tarea.asignacion.splice(weekday,1,asignacion);
 
                     })
 
