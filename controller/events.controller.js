@@ -89,4 +89,35 @@ function postEvent(req, res){
 
     });
 }
-module.exports = {getAll, postEvent};
+function deleteEvent(req, res){
+    const date = req.body.date;
+    const created_by = req.body.created_by;
+
+    const sql = `DELETE FROM events WHERE (date = ${date} && created_by = ${created_by})`
+
+    db.query(sql, (error, result) => {
+
+        if(error){
+            
+            console.error('ERROR DELETING EVENT');
+            console.error(error);
+
+            const response = {
+                error: true,
+                code: 400,
+                message:error.message
+            };
+            res.send(response);
+
+        } else {
+
+            const response = {
+                error: false,
+                code: 200,
+                data:result
+            };
+            res.send(response);
+        }
+    })
+}
+module.exports = {getAll, postEvent, deleteEvent};
