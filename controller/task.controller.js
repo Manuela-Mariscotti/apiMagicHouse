@@ -87,7 +87,7 @@ function getTaskByHome(req,res){
                         let tarea = tareas.find(element => element.taskname == item.taskname)
 
                         let asignacion = {
-                            taskday : item.taskday, 
+                            taskday : item.taskday,
                             username: item.username
                         }
 
