@@ -90,10 +90,12 @@ function postEvent(req, res){
     });
 }
 function deleteEvent(req, res){
-    const date = req.body.date;
+    const title = req.body.title;
     const created_by = req.body.created_by;
 
-    const sql = `DELETE FROM events WHERE (date = ${date} && created_by = ${created_by})`
+    const sql = `DELETE FROM events WHERE (title = '${title}' && created_by = ${created_by})`
+
+    console.log(sql);
 
     db.query(sql, (error, result) => {
 
