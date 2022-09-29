@@ -98,4 +98,81 @@ function getUserByid(req, res){
     });
 }
 
-module.exports = {getUsersByHome, getUserByid}
+function deleteUserById(req,res){
+    console.log("Lanzada deleteUserById()");
+
+    let sql = `DELETE FROM users WHERE id_user = ${req.query.id_user}`
+
+    db.connect((error)=>{
+        if (error) {
+            let response = {
+                error : true,
+                code : 400,
+                message : 'DB Connection error --> '+error.message
+            }
+            res.send(response);
+                
+        } else {
+            db.query(sql,(error,result)=>{
+                if (error) {
+                    let response = {
+                        error: true,
+                        code: 400,
+                        message : 'Error executing DB query -->'+error.message
+                    }
+                    res.send(response)
+
+                } else {
+                    let response = {
+                        error : false,
+                        code : 200,
+                        data : result
+                    }
+                    res.send(response)
+                    console.log("Eliminación realizada.");
+                }
+            })
+        }
+    })
+}
+
+function editUserById(req,res){
+    console.log("Lanzada editUserById()");
+    console.log(req.body);
+
+    let sql = `UPDATE users SET username="${req.body.username}", email="${req.body.email}" WHERE id_user=${req.body.id_user}`
+
+    db.connect((error)=>{
+        if (error) {
+            let response = {
+                error : true,
+                code : 400,
+                message : 'DB Connection error --> '+error.message
+            }
+            res.send(response);
+                
+        } else {
+            db.query(sql,(error,result)=>{
+                if (error) {
+                    let response = {
+                        error: true,
+                        code: 400,
+                        message : 'Error executing DB query -->'+error.message
+                    }
+                    res.send(response)
+
+                } else {
+                    let response = {
+                        error : false,
+                        code : 200,
+                        data : result
+                    }
+                    res.send(response)
+                    console.log("Actualización realizada.");
+                }
+            })
+        }
+    })
+}
+
+module.exports = {getUsersByHome, getUserByid, deleteUserById, editUserById}
