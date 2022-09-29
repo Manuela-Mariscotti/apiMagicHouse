@@ -255,5 +255,33 @@ function doTask(req, res){
 
 }
 
+function deleteTask(req,res){
+    const id_task = req.body.task.id_task
+    const id_user = req.body.task.id_user
+    const day = req.body.task.day
 
-module.exports = {getTasks, getTaskByHome, postNewTask, doTask}
+    const sql = `DELETE FROM users_tasks WHERE (id_task = ${id_task} && id_user = ${id_user} && day = "${day}")`
+
+    db.query(sql,(error,result)=>{
+        if (error) {
+            console.error('Error executing deleteTask()');
+            console.error(error);
+            const response = {
+                error: true,
+                code : 400,
+                message : error.message
+            }
+            res.send(response);
+        } else {
+            const response = {
+                error: false,
+                code : 200,
+                data : result
+            }
+            res.send(response);
+        }
+    })
+}
+
+
+module.exports = {getTasks, getTaskByHome, postNewTask, doTask, deleteTask}

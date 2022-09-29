@@ -43,6 +43,8 @@ function getBudgetPercent(req, res){
 }
 
 function postBudget(req, res){
+    console.log(req.body);
+
     let sql = 
         `UPDATE hogares SET budget = ${req.body.budget}
         WHERE (id_hogar = ${req.body.id_hogar})`

@@ -10,4 +10,6 @@ router.post('/task', taskCtrl.postNewTask);
 
 router.put('/task', taskCtrl.doTask);
 
+router.delete('/task',taskCtrl.deleteTask)
+
 module.exports = router;
