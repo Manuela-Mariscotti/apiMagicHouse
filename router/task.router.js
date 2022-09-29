@@ -8,4 +8,6 @@ router.get('/taskbyhome',taskCtrl.getTaskByHome);
 
 router.post('/task', taskCtrl.postNewTask);
 
+router.put('/task', taskCtrl.doTask);
+
 module.exports = router;
