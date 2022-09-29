@@ -240,7 +240,7 @@ function doTask(req, res){
                 message: error.message
             };
             res.send(response);
-
+ 
         } else {
 
             const response = {
