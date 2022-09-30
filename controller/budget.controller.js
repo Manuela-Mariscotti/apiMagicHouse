@@ -1,6 +1,7 @@
 const db = require('../database');
 const moment = require('moment')
 
+
 function getBudgetPercent(req, res){
     let now = moment();
     let sql = `
