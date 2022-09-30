@@ -4,12 +4,19 @@ const moment = require('moment')
 function getNextEvent(req, res){
     db.connect( (error) => {
         
+        const id_hogar = req.query.id_hogar
         const today = moment().format('YYYY-M-D')
 
         if(error){
             console.error('ERROR FETCHING NEXT EVENT');
         }else{
-            let sql = `SELECT * FROM events WHERE (date > '${today}') ORDER BY date LIMIT 1`
+            
+            let sql = `SELECT * FROM events 
+            JOIN users on (users.id_user = events.created_by)
+            WHERE (date >= "${today}" && id_hogar=${id_hogar}) limit 1`;
+
+            console.log(sql);
+
             db.query(sql, (error, result) => {
                 if(error){
                     console.error('ERROR EXECUTING NEXTEVENT QUERY')

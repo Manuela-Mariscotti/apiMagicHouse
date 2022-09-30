@@ -260,8 +260,8 @@ function deleteTask(req,res){
     const id_user = req.body.task.id_user
     const day = req.body.task.day
 
-    const sql = `DELETE FROM users_tasks WHERE (id_task = ${id_task} && id_user = ${id_user} && day = "${day}")`
-
+    const sql = `DELETE FROM users_tasks WHERE (id_task = ${id_task} && day = "${day}")`
+    console.log(sql);    
     db.query(sql,(error,result)=>{
         if (error) {
             console.error('Error executing deleteTask()');
