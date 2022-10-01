@@ -255,9 +255,9 @@ function updateTransactionsTable(transactions, id_hogar){
         }
     }) : 0;
 
-    let avg = sum.cantidadAportada / usuarios.length;
-    // console.log('sum');
-    // console.log(sum)
+    let avg = ( sum.cantidadAportada / usuarios.length ).toFixed(0);
+    console.log('Generando transacciones');
+    console.log('avg --> ' + avg)
     // console.log('avg')
     // console.log(avg)
 
@@ -275,6 +275,8 @@ function updateTransactionsTable(transactions, id_hogar){
     usuarios.forEach((user) => {
         user.saldo = user.cantidadAportada - avg;
         user.saldo > 0 ? positivos.push(user) : user.saldo < 0 ? negativos.push(user) : ceros.push(user);
+        console.log('USUARIO --> ' + user)
+
     });
 
 
@@ -297,7 +299,7 @@ function updateTransactionsTable(transactions, id_hogar){
                 
                 if (cantidadSobrante < 0) {
                 
-                    transaction.value = pagador.saldo - cantidadSobrante * -1
+                    transaction.value = (pagador.saldo - cantidadSobrante) * -1;
                 
                     pagador.saldo = cantidadSobrante;
                     positivos.shift();
