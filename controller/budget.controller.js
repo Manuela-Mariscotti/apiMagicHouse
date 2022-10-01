@@ -43,6 +43,7 @@ function getBudgetPercent(req, res){
 }
 
 function postBudget(req, res){
+<<<<<<< HEAD
     const sql = 
         `UPDATE hogares SET budget = ${req.body.budget}
         WHERE (id_hogar = ${req.body.id_hogar})
@@ -75,6 +76,38 @@ function postBudget(req, res){
             }
         
         });
+=======
+    let sql = 
+        `UPDATE hogares SET budget = ${req.body.budget}
+        WHERE (id_hogar = ${req.body.id_hogar})`
+
+    db.query(sql, (error, result) => {
+    
+        if(error){
+
+            console.error('ERROR EXECUTING QUERY SETBUDGET');
+            console.error(error.message);
+
+            const response = {
+                error: false,
+                code: 400,
+                message: error.message
+            };
+            res.send(response);
+
+        } else {
+
+            const response = {
+                error: true,
+                code: 200,
+                data: result
+            };
+            res.send(response);
+
+        }
+
+    })
+>>>>>>> 0771e08e867e6a208bc88852e94713f34e619d22
 }
 
 module.exports = {getBudgetPercent, postBudget}

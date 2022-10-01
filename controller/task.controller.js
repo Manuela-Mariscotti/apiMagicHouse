@@ -52,37 +52,13 @@ function getTaskByHome(req,res){
 
     console.log(req.query);
 
-    // let sql = `SELECT taskname, username, users.id_hogar,day FROM tasks JOIN users_tasks ON (tasks.id_task = users_tasks.id_task) JOIN users on (users_tasks.id_user = users.id_user)
-    // WHERE id_hogar=${req.query.id_hogar} order by taskname` 
-
-    // let sql = `SELECT 
-    // taskname,
-    // username,
-    // users.id_hogar,
-    // day as taskday
-    // FROM tasks JOIN users_tasks on (tasks.id_task = users_tasks.id_task)
-    // JOIN users on (users_tasks.id_user = users.id_user)
-    // WHERE id_hogar=${req.query.id_hogar} GROUP by day `
-
-    // let sql = `SELECT 
-    // taskname,
-    // username,
-    // users.id_hogar,
-    // day as taskday
-    // FROM tasks JOIN users_tasks on (tasks.id_task = users_tasks.id_task)
-    // JOIN users on (users_tasks.id_user = users.id_user)
-    // WHERE id_hogar=${req.query.id_hogar} order by day 
-    //  `
-
     let sql = `SELECT 
     taskname,
-    users_tasks.id_task,
     username,
-    users.id_hogar,
     day as taskday
     FROM tasks JOIN users_tasks on (tasks.id_task = users_tasks.id_task)
     JOIN users on (users_tasks.id_user = users.id_user)
-    WHERE id_hogar=${req.query.id_hogar} order by users_tasks.id_task `
+    WHERE id_hogar=${req.query.id_hogar} `
 
     db.connect((error)=>{
         if (error) {
@@ -105,25 +81,75 @@ function getTaskByHome(req,res){
                     
                 }else {
 
-                    let data = [];
+                    let tareas = []
+
                     result.forEach( (item) => {
-                        data.push({
-                            taskname : item.taskname,
-                            username : item.username,
-                            id_hogar : item.id_hogar,
-                            taskday : item.taskday
-                        }) 
+                        let tarea = tareas.find(element => element.taskname == item.taskname)
+
+                        let asignacion = {
+                            taskday : item.taskday,
+                            username: item.username
+                        }
+
+                        let tmp = []
+                        for(let i = 0; i < 7; i++){
+                            tmp.push({
+                                username: 'unasigned'
+                            })
+                        }
+
+
+                        if (tarea == undefined) {
+
+                            tarea = {
+                                taskname: item.taskname, 
+                                asignacion: tmp
+                            }
+                            tareas.push(tarea)
+                        }
+
+                        let weekday;
+
+                        switch(item.taskday){
+                            case 'L': 
+                                weekday = 0
+                                break;
+                            case 'M':
+                                weekday = 1;
+                                break;
+                            case 'X': 
+                                weekday = 2
+                                break;
+                            case 'J':
+                                weekday = 3;
+                                break;
+                            case 'V': 
+                                weekday = 4
+                                break;
+                            case 'S':
+                                weekday = 5;
+                                break;
+                            case 'D':
+                                weekday = 6;
+                                break;
+                            default:
+                                weekday = -1;
+                                break
+                        }
+                        
+                        // tarea.asignacion.push(asignacion)
+                        tarea.asignacion.splice(weekday,1,asignacion);
+
                     })
 
-                    console.log(result);
+                    console.log(tareas);
                     
                     let response = {
                         error : false,
                         code : 200,
-                        data: data
+                        data: tareas
                     }
                     res.send(response)
-
                 }
             })
         }

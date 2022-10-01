@@ -1,14 +1,19 @@
 const db = require("../database");
+const moment = require('moment')
 
 function getNextEvent(req, res){
     db.connect( (error) => {
+        
+        const today = moment().format('YYYY-M-D')
+
         if(error){
             console.error('ERROR FETCHING NEXT EVENT');
         }else{
-            let sql = `SELECT * FROM events ORDER BY date LIMIT 1`
+            let sql = `SELECT * FROM events WHERE (date > '${today}') ORDER BY date LIMIT 1`
             db.query(sql, (error, result) => {
                 if(error){
                     console.error('ERROR EXECUTING NEXTEVENT QUERY')
+                    console.error(error);
                 }else{
                     const response = {
                         error: false,
@@ -24,7 +29,6 @@ function getNextEvent(req, res){
 }
 
 function getPendingTasks(req, res){
-    console.log('holi')
     db.connect( (error) => {
         if(error){
             console.error('ERROR FETCHING PENDING TASKS');
