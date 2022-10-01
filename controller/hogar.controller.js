@@ -1,5 +1,31 @@
 const db = require('../database');
 
+function getHogarById(req,res){
+    const id_hogar = req.query.id_hogar;
+
+    let sql = `SELECT * FROM hogares WHERE id_hogar=${id_hogar}`
+
+    db.query (sql,(error,result)=>{
+        if (error) {
+            let response = {
+                error : true,
+                code : 400,
+                message : 'Error executing DB query -->'+error.message
+            };
+            
+            res.send(response)
+            
+        } else {
+            let response = {
+                error : false,
+                code : 200,
+                data : result
+            };
+            
+            res.send(response)
+        }
+    })
+}
 
 function postNewHogar(req,res){
     console.log("Lanzada postNewHogar()");
@@ -93,4 +119,4 @@ function putJoinHogar(req,res){
     })
 }
 
-module.exports = {postNewHogar,putJoinHogar}
+module.exports = {postNewHogar,putJoinHogar, getHogarById}

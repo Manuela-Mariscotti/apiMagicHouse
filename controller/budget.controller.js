@@ -1,6 +1,7 @@
 const db = require('../database');
 const moment = require('moment')
 
+
 function getBudgetPercent(req, res){
     let now = moment();
     let sql = `
@@ -44,6 +45,7 @@ function getBudgetPercent(req, res){
 
 function postBudget(req, res){
 <<<<<<< HEAD
+<<<<<<< HEAD
     const sql = 
         `UPDATE hogares SET budget = ${req.body.budget}
         WHERE (id_hogar = ${req.body.id_hogar})
@@ -77,6 +79,10 @@ function postBudget(req, res){
         
         });
 =======
+=======
+    console.log(req.body);
+
+>>>>>>> 0a5d6a058384052865a92309266bcfcfc59e3048
     let sql = 
         `UPDATE hogares SET budget = ${req.body.budget}
         WHERE (id_hogar = ${req.body.id_hogar})`

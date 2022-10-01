@@ -55,7 +55,9 @@ function getTaskByHome(req,res){
     let sql = `SELECT 
     taskname,
     username,
-    day as taskday
+    day as taskday,
+    users_tasks.id_task,
+    done
     FROM tasks JOIN users_tasks on (tasks.id_task = users_tasks.id_task)
     JOIN users on (users_tasks.id_user = users.id_user)
     WHERE id_hogar=${req.query.id_hogar} `
@@ -88,7 +90,8 @@ function getTaskByHome(req,res){
 
                         let asignacion = {
                             taskday : item.taskday,
-                            username: item.username
+                            username: item.username,
+                            isDone: !!item.done
                         }
 
                         let tmp = []
@@ -102,6 +105,7 @@ function getTaskByHome(req,res){
                         if (tarea == undefined) {
 
                             tarea = {
+                                id_task: item.id_task,
                                 taskname: item.taskname, 
                                 asignacion: tmp
                             }
@@ -208,5 +212,76 @@ function postNewTask(req,res){
 }
 
 
+function doTask(req, res){
 
-module.exports = {getTasks, getTaskByHome, postNewTask}
+    console.log(req.body);
+
+    const id_task = req.body.id_task;
+    const day = req.body.day;
+    const id_hogar = req.body.id_hogar;
+
+    let sql = 
+        `UPDATE users_tasks 
+        JOIN users ON (users_tasks.id_user = users.id_user)
+        SET done = 1 
+        WHERE(id_task = ${id_task} && day = '${day}' && id_hogar = ${id_hogar})`;
+
+    console.log(sql)
+
+    db.query(sql, (error, result) => {
+
+        if(error){
+            console.error('ERROR MARKING TASK AS DONE');
+            console.error(error);
+
+            const response = {
+                error: true,
+                code: 400,
+                message: error.message
+            };
+            res.send(response);
+ 
+        } else {
+
+            const response = {
+                error: false,
+                code: 200,
+                data: result
+            };
+            res.send(response);
+
+        }
+    })
+
+}
+
+function deleteTask(req,res){
+    const id_task = req.body.task.id_task
+    const id_user = req.body.task.id_user
+    const day = req.body.task.day
+
+    const sql = `DELETE FROM users_tasks WHERE (id_task = ${id_task} && day = "${day}")`
+    console.log(sql);    
+    db.query(sql,(error,result)=>{
+        if (error) {
+            console.error('Error executing deleteTask()');
+            console.error(error);
+            const response = {
+                error: true,
+                code : 400,
+                message : error.message
+            }
+            res.send(response);
+        } else {
+            const response = {
+                error: false,
+                code : 200,
+                data : result
+            }
+            res.send(response);
+        }
+    })
+}
+
+
+module.exports = {getTasks, getTaskByHome, postNewTask, doTask, deleteTask}
