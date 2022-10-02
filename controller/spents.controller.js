@@ -311,7 +311,7 @@ function updateTransactionsTable(transactions, id_hogar){
                     pagador.saldo = 0;
                 }
 
-                transactions.push(transaction)
+                transactions.push(transaction) 
             }
             
         });
