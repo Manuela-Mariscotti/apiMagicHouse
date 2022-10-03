@@ -27,9 +27,11 @@ function getBudgetPercent(req, res){
         } else {
 
             let data = {
-                spents: result[0].total,
-                budget: result[0].budget
+                spents: result[0].total ? result[0].total : 0,
+                budget: result[0].budget ? result[0].budget : -1
             }
+
+            console.log(data);
 
             const response = {
                 error: false,

@@ -299,14 +299,14 @@ function updateTransactionsTable(transactions, id_hogar){
                 
                 if (cantidadSobrante < 0) {
                 
-                    transaction.value = (pagador.saldo - cantidadSobrante) * -1;
+                    transaction.value = Number( ( (pagador.saldo - cantidadSobrante) * -1).toFixed(2) );
                 
                     pagador.saldo = cantidadSobrante;
                     positivos.shift();
                 
                 } else {
                 
-                    transaction.value = pagador.saldo * -1;
+                    transaction.value = Number((pagador.saldo * -1).toFixed(2));
                     cobrador.saldo = cantidadSobrante;
                     pagador.saldo = 0;
                 }
