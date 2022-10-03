@@ -33,7 +33,7 @@ function login(req, res){
                     let response = {
                         error:false,
                         code:200,
-                        data: result
+                        data: result 
                     };
 
                     res.send(response);
