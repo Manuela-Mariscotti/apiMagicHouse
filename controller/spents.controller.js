@@ -322,7 +322,7 @@ function updateTransactionsTable(transactions, id_hogar){
             let x = transactionsDB.findIndex( (item) => {
                 return element.pagador.id_usuario == item.id_pagador && element.cobrador.id_usuario == item.id_cobrador &&
                     element.value == item.value && item.done != 0
-            })
+            }) 
             
             console.log(x)
 
