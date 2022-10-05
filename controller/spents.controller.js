@@ -206,7 +206,7 @@ function updateTransactionsTable(transactions, id_hogar){
     console.log(sql_transaction)
 
 
-    db.query('DELETE transactions FROM transactions JOIN users ON (id_pagador = id_user) WHERE (id_hogar = 1 && done = false)', (error, result) => {
+    db.query(`DELETE transactions FROM transactions JOIN users ON (id_pagador = id_user) WHERE (id_hogar = ${id_hogar} && done = false)`, (error, result) => {
 
         if(error){
             console.error('ERROR UPDATING TABLE "transactions"');
